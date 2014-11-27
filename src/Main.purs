@@ -11,7 +11,14 @@ import Lib
 
 foreign import data Popup :: !
 
-foreign import alert :: forall eff. String -> Eff (popup :: Popup | eff) Unit
+foreign import myAlert
+  """
+  function myAlert(msg) {
+    return function() {
+      alert(msg)
+    }
+  }
+  """ :: forall eff. String -> Eff (popup :: Popup | eff) Unit
 
 find :: forall eff. String -> Eff (dom :: DOM | eff) J.JQuery 
 find sel = J.body >>= J.find sel
@@ -23,4 +30,4 @@ main = J.ready do
   nameField <- find "input[name=name]"
   submit <- find "input[type=submit]"
 
-  J.on "click" (\_ _ -> getTextValue nameField >>= alert <<< calculateFPName) submit
+  J.on "click" (\_ _ -> getTextValue nameField >>= myAlert <<< calculateFPName) submit
